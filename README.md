@@ -48,7 +48,7 @@
 ## Step 2. Add the dependency
 ```
 	dependencies {
-	        compile 'com.github.Brioal:Label-master:1.4'
+	        compile 'com.github.Brioal:LabelViewProject:1.0'
 	}
 ```
 
