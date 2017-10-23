@@ -3,6 +3,7 @@ package com.brioal.labelviewproject;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Toast;
 
 import com.brioal.labelview.LabelView;
@@ -11,6 +12,7 @@ import com.brioal.labelview.interfaces.OnLabelSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     LabelView mLabelView;
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void longClick(int position, String content) {
-                Toast.makeText(MainActivity.this, "长按:"+content, Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "长按:" + content, Toast.LENGTH_SHORT).show();
             }
         });
         mLabelView.setColorBGNormal(Color.RED);
@@ -37,25 +39,29 @@ public class MainActivity extends AppCompatActivity {
         mLabelView.setColorTextNormal(Color.GREEN);
         mLabelView.setColorTextSelect(Color.RED);
         mList = new ArrayList<>();
-        mList.add(new LabelEntity("对方的", "的钱我的我"));
-        mList.add(new LabelEntity("打扫打扫", "的钱我的我"));
-        mList.add(new LabelEntity("打扫打扫", "的钱我的我"));
-        mList.add(new LabelEntity("打扫打扫打扫打扫", "的钱我的我"));
-        mList.add(new LabelEntity("连骗带哄", "的钱我的我"));
-        mList.add(new LabelEntity("连骗带哄", "的钱我的我"));
-        mList.add(new LabelEntity("额文件", "的钱我的我"));
-        mList.add(new LabelEntity("额文件", "的钱我的我"));
-        mList.add(new LabelEntity("额文件", "的钱我的我"));
-        mList.add(new LabelEntity("发生的纷纷", "的钱我的我"));
-        mList.add(new LabelEntity("发生的纷纷", "的钱我的我"));
-        mList.add(new LabelEntity("夫人突然", "的钱我的我"));
-        mList.add(new LabelEntity("还特意让他", "的钱我的我"));
-        mList.add(new LabelEntity("惹人", "的钱我的我"));
-        mList.add(new LabelEntity("惹人", "的钱我的我"));
-        mList.add(new LabelEntity("惹人", "的钱我的我"));
-        mList.add(new LabelEntity("惹人", "的钱我的我"));
-        mList.add(new LabelEntity("惹人", "的钱我的我"));
+        mList.add(new LabelEntity("+", "的钱我的我"));
         mLabelView.setSelectedIndex(2);
         mLabelView.setLabels(mList);
+    }
+
+    public void addLabel(View view) {
+        int count = new Random().nextInt(8);
+        StringBuffer buffer = new StringBuffer();
+        for (int i = 0; i < count; i++) {
+            buffer.append((char) (0x4e00 + (int) (Math.random() * (0x9fa5 - 0x4e00 + 1))));
+        }
+        String str = buffer.toString();
+        mList.add(new LabelEntity(str, str));
+        mLabelView.setSelectedIndex(2);
+        mLabelView.setLabels(mList);
+    }
+
+    public void select(View view) {
+        int count = mList.size() / 2;
+        List<LabelEntity> selecteds = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            selecteds.add(mList.get(new Random().nextInt(count*2)));
+        }
+        mLabelView.setSelectedLabels(selecteds);
     }
 }

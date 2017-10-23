@@ -29,6 +29,36 @@ public class LabelView extends ViewGroup {
     private int mColorTextNormal = Color.WHITE;
     private int mColorTextSelect = Color.WHITE;
     private int mSelectedIndex = 0;
+    private List<LabelEntity> mLabels = new ArrayList<>();
+
+    /**
+     * 批量选中
+     * @param selectedLabels
+     */
+    public void setSelectedLabels(List<LabelEntity> selectedLabels) {
+        if (selectedLabels == null || selectedLabels.size() == 0) {
+            return;
+        }
+        List<Integer> index = new ArrayList<>();
+        for (int i = 0; i < selectedLabels.size(); i++) {
+            LabelEntity current = selectedLabels.get(i);
+            if (mLabels.contains(current)) {
+                index.add(mLabels.indexOf(current));
+            }
+        }
+        for (int j = 0; j < getChildCount(); j++) {
+            TextView tv = (TextView) getChildAt(j);
+            if (index.contains(j)) {
+                //选中
+                tv.setTextColor(mColorTextSelect);
+                tv.getBackground().setColorFilter(mColorBGSelect, PorterDuff.Mode.SRC_IN);
+            } else {
+                //未选中
+                tv.setTextColor(mColorTextNormal);
+                tv.getBackground().setColorFilter(mColorBGNormal, PorterDuff.Mode.SRC_IN);
+            }
+        }
+    }
 
     public void setSelectedIndex(int selectedIndex) {
         mSelectedIndex = selectedIndex;
@@ -83,6 +113,8 @@ public class LabelView extends ViewGroup {
     }
 
     public void setLabels(final List<LabelEntity> labels) {
+        mLabels.clear();
+        mLabels.addAll(labels);
         removeAllViews();
         mTvs = new ArrayList<>();
         for (int i = 0; i < labels.size(); i++) {
@@ -143,17 +175,17 @@ public class LabelView extends ViewGroup {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         mWidth = MeasureSpec.getSize(widthMeasureSpec);
         int count = 0;
-        int w = 0;
+        int w = mLabelPading;
         for (int i = 0; i < getChildCount(); i++) {
             TextView tv = (TextView) getChildAt(i);
             measureChild(tv, widthMeasureSpec, heightMeasureSpec);
             if (w + tv.getMeasuredWidth() + tv.getPaddingLeft() + tv.getPaddingRight() > mWidth) {
                 count++;
-                w = 0;
+                w = mLabelPading;
             }
-            w += tv.getMeasuredWidth();
+            w += tv.getMeasuredWidth()+ mLabelPading;
         }
-        if (w > 0) {
+        if (w >= 0) {
             count++;
         }
         System.out.println("Count" + count);
@@ -166,7 +198,7 @@ public class LabelView extends ViewGroup {
         int startY = mLabelPading;
         for (int i = 0; i < getChildCount(); i++) {
             TextView tv = (TextView) getChildAt(i);
-            if (startX + tv.getMeasuredWidth() > mWidth) {
+            if (startX + tv.getMeasuredWidth()+ tv.getPaddingLeft() + tv.getPaddingRight()  > mWidth) {
                 startX = mLabelPading;
                 startY += mLabelPading * 2 + tv.getMeasuredHeight();
             }
