@@ -28,4 +28,23 @@ public class LabelEntity {
     public void setContent(String content) {
         mContent = content;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        LabelEntity that = (LabelEntity) o;
+
+        if (mTitle != null ? !mTitle.equals(that.mTitle) : that.mTitle != null) return false;
+        return mContent != null ? mContent.equals(that.mContent) : that.mContent == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = mTitle != null ? mTitle.hashCode() : 0;
+        result = 31 * result + (mContent != null ? mContent.hashCode() : 0);
+        return result;
+    }
 }
